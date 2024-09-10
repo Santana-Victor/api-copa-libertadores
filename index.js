@@ -3,6 +3,7 @@ const {
   retornaCampeonatos,
   retornaCampeonatoPeloId,
   retornaCampeonatoPeloAno,
+  retornaCampeonatoPeloTimeVencedor,
 } = require('./servico/retornaCampeonatos.js');
 
 const app = express();
@@ -11,11 +12,14 @@ app.get('/campeonatos', async (req, res) => {
   let campeonatos;
 
   const ano = req.query.ano;
+  const time = req.query.time;
 
-  if (typeof ano === 'undefined') {
+  if (typeof ano === 'undefined' && typeof time === 'undefined') {
     campeonatos = await retornaCampeonatos();
-  } else {
+  } else if (typeof ano !== 'undefined') {
     campeonatos = await retornaCampeonatoPeloAno(parseInt(ano));
+  } else if (typeof time !== 'undefined') {
+    campeonatos = await retornaCampeonatoPeloTimeVencedor(time);
   }
 
   if (campeonatos.length > 0) {

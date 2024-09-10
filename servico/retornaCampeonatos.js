@@ -37,8 +37,22 @@ async function retornaCampeonatoPeloAno(ano) {
   return campeonato;
 }
 
+async function retornaCampeonatoPeloTimeVencedor(time) {
+  const conexao = await pool.getConnection();
+
+  const tabelaCampeonatos = await conexao.query(
+    `SELECT * FROM Campeonatos WHERE campeao = '${time}'`
+  );
+  const campeonato = tabelaCampeonatos[0];
+
+  conexao.release;
+
+  return campeonato;
+}
+
 module.exports = {
   retornaCampeonatos,
   retornaCampeonatoPeloId,
   retornaCampeonatoPeloAno,
+  retornaCampeonatoPeloTimeVencedor,
 };
