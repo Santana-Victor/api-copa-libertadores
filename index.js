@@ -2,14 +2,27 @@ const express = require('express');
 const {
   retornaCampeonatos,
   retornaCampeonatoPeloId,
+  retornaCampeonatoPeloAno,
 } = require('./servico/retornaCampeonatos.js');
 
 const app = express();
 
 app.get('/campeonatos', async (req, res) => {
-  const campeonatos = await retornaCampeonatos();
+  let campeonatos;
 
-  res.json(campeonatos);
+  const ano = req.query.ano;
+
+  if (typeof ano === 'undefined') {
+    campeonatos = await retornaCampeonatos();
+  } else {
+    campeonatos = await retornaCampeonatoPeloAno(parseInt(ano));
+  }
+
+  if (campeonatos.length > 0) {
+    res.json(campeonatos);
+  } else {
+    res.status(404).json({ mensagem: 'Nenhum campeonato encontrado' });
+  }
 });
 
 app.get('/campeonatos/:id', async (req, res) => {
