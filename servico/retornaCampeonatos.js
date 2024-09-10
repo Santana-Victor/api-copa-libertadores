@@ -11,4 +11,17 @@ async function retornaCampeonatos() {
   return campeonatos;
 }
 
-module.exports = retornaCampeonatos;
+async function retornaCampeonatoPeloId(id) {
+  const conexao = await pool.getConnection();
+
+  const tabelaCampeonatos = await conexao.query(
+    `SELECT * FROM Campeonatos WHERE id = ${id}`
+  );
+  const campeonato = tabelaCampeonatos[0];
+
+  conexao.release();
+
+  return campeonato;
+}
+
+module.exports = { retornaCampeonatos, retornaCampeonatoPeloId };
